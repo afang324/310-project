@@ -1,0 +1,109 @@
+doctype html
+html
+    head
+        title our app
+    h1(align='center') Welcome to "parking lot finder!"
+    style.
+        #panel1 {
+            position: absolute;
+            top: 100px;
+            left: 70%;
+        }
+        #panel2 {
+            position: absolute;
+            top: 100px;
+            left: 80%;
+        }
+        #panel3 {
+            position: absolute;
+            top: 100px;
+            left: 88%;
+        }
+        #panel4 {
+            position: absolute;
+            top: 150px;
+            left: 88%;
+        }
+        #panel5 {
+            position: absolute;
+            top: 190px;
+            left: 88%;
+        }
+        #panel6 {
+            position: absolute;
+            top: 230px;
+            left: 88%;
+        }
+    script(type='text/javascript', src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=false")
+    script(type='text/javascript', src='/map/googlemap.js')
+    script(type='text/javascript').
+        var Bikes = !{JSON.stringify(Bikes)}
+        var Motorcycles = !{JSON.stringify(Motorcycles)}
+        var Disabilities = !{JSON.stringify(Disabilities)}
+        function initializeMapForDisability() {
+            var mapCanvas = document.getElementById("map");
+            var googleMap = new Mapping.GoogleMap(mapCanvas, "DisabilityCar");
+            googleMap.addMarkers(Disabilities);
+        }
+        function initializeMapForBike() {
+            var mapCanvas = document.getElementById("map");
+            var googleMap = new Mapping.GoogleMap(mapCanvas, "Bike");
+            googleMap.addMarkers(Bikes);
+        }
+        function initializeMapForMotorBike() {
+            var mapCanvas = document.getElementById("map");
+            var googleMap = new Mapping.GoogleMap(mapCanvas, "MotorBike");
+            googleMap.addMarkers(Motorcycles);
+        }
+        function filterMapForDisability() {
+            var markers=[];
+            var mapCanvas = document.getElementById("map");
+            var googleMap = new Mapping.GoogleMap(mapCanvas, "DisabilityCar");
+            markers=googleMap.addMarkers(Disabilities);
+            googleMap.removeMarkersFarAway(markers);
+        }
+        function filterMapForBike() {
+            var markers = [];
+            var mapCanvas = document.getElementById("map");
+            var googleMap = new Mapping.GoogleMap(mapCanvas, "Bike");
+            markers = googleMap.addMarkers(Bikes);
+            googleMap.removeMarkersFarAway(markers);
+        }
+        function filterMapForMotorbike() {
+            var markers = [];
+            var mapCanvas = document.getElementById("map");
+            var googleMap = new Mapping.GoogleMap(mapCanvas, "MotorBike");
+            markers = googleMap.addMarkers(Motorcycles);
+            googleMap.removeMarkersFarAway(markers);
+        }
+    body
+        p(align='right') Choose your type of vechile!!!!!!!!.
+        p Our app helps you to find the parking lot for you disability cars, bikes and motorbikes.
+        p Log in here to make comments and add favorite parking lots
+        form#formLoginPage(name="loginpage",method="get",action="/loginpage")
+            button#btnSubmit(type="submit") login
+        br
+        form#formLoginPage(name="logoutpage",method="get",action="/logoutpage")
+            button#btnSubmit(type="submit") logout
+        br
+        form#formLoginPage(name="parkinglist",method="get",action="/parkinglist")
+            button#btnSubmit(type="submit") list view
+        br
+        form#formUpdateDatabase(name="updatedatabase",method="post",action="/updatedatabase")
+            button#btnSubmit(type="submit") update database
+        br
+        form#formUpdateLatLng(name="updatelatlng",method="post",action="/updatelatlng")
+            button#btnSubmit(type="submit") update coordinate
+        #panel1(style='margin-left: -52px')
+            button#car(onclick='initializeMapForDisability()') Disability Cars
+        #map(style='height: 500px; width: 800px;')
+        #panel3(style='margin-left: -52px')
+            button#car(onclick='initializeMapForMotorBike()') MotorBike
+        #panel2(style='margin-left: -52px')
+            button#car(onclick='initializeMapForBike()') Bike
+        #panel4
+            button#filter(onclick='filterMapForDisability()') filterDisabilityByDistance
+        #panel5
+            button#filter(onclick='filterMapForBike()') filterBikeByDistance
+        #panel6
+            button#filter(onclick='filterMapForMotorbike()') filterMotorbikeByDistance

@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    h1= title
+    form#formModifyParking(name="editparking",method="post",action="/editparking")
+        <select name="actiontype">
+        <option value="add">Add</option>
+        <option value="update">Update</option>
+        <option value="delete">Delete</option>
+        </selectinput#inputType(type="text", placeholder="actiontype", name="actiontype")
+        br
+        input#inputAddress(type="text", placeholder="type", name="type")
+        input#inputAddress(type="text", placeholder="address", name="address")
+        input#inputSpace(type="text", placeholder="space", name="space")
+        button#btnSubmit(type="submit") submit
+        
+    p The UPDATE option updates the number of space based on the parking type and address

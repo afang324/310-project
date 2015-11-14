@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1= title
+    form#formUserLogin(name="userlogin",method="post",action="/userlogin")
+        input#inputUserName(type="text", placeholder="username", name="username")
+        input#inputUserEmail(type="text", placeholder="password", name="password")
+        button#btnSubmit(type="submit") submit
+        
+    p Not a User? Become one!
+    form#formNewAccount(name="newaccountpage",method="get",action="/newaccountpage")
+        button#btnSubmit(type="submit") Create Account

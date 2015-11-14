@@ -1,0 +1,70 @@
+doctype html
+html
+  head
+    title our app
+  h1(align='center') Welcome to "parking lot finder!"
+  style.
+    #select{
+      position:absolute;
+      top:50px;
+      left:80%;
+    }
+    #panel1 {
+      position: absolute;
+      top: 100px;
+      left: 70%;
+      margin-left: -180px;
+      z-index: 5;
+      background-color: #fff;
+      padding: 5px;
+      border: 1px solid #999;
+    }
+    #panel2 {
+      position: absolute;
+      top: 100px;
+      left: 80%;
+      margin-left: -180px;
+      z-index: 5;
+      background-color: #fff;
+      padding: 5px;
+      border: 1px solid #999;
+    }
+    #panel3 {
+      position: absolute;
+      top: 100px;
+      left: 88%;
+      margin-left: -180px;
+      z-index: 5;
+      background-color: #fff;
+      padding: 5px;
+      border: 1px solid #999;
+    }
+  script(type='text/javascript', src='https://maps.googleapis.com/maps/api/js')
+  script(type='text/javascript', src='/map/googlemap.js')
+  script(type='text/javascript').
+    function initializeMapForDisability() {
+      var mapCanvas = document.getElementById("map");
+      var googleMap = new Mapping.GoogleMap(mapCanvas,"DisabilityCar");
+    }
+    function initializeMapForBike() {
+      var mapCanvas = document.getElementById("map");
+      var googleMap = new Mapping.GoogleMap(mapCanvas,"Bike");
+    }
+    function initializeMapForMotorBike() {
+      var mapCanvas = document.getElementById("map");
+      var googleMap = new Mapping.GoogleMap(mapCanvas,"MotorBike");
+    }
+
+  body
+    p(align='right') Choose your type of vechile!!!!!!!!.
+    p Our app helps you to find the parking lot for you disability cars, bikes and motorbikes.
+    p Log in here to make comments and add favorite parking lots
+    button#login(onclick='') Click to Login
+    #panel1(style='margin-left: -52px')
+      button#car(onclick='initializeMapForDisability()') Disability Cars
+    #map(style='height: 500px; width: 800px;')
+    #panel3(style='margin-left: -52px')
+      button#car(onclick='initializeMapForMotorBike()') MotorBike
+    #panel2(style='margin-left: -52px')
+      button#car(onclick='initializeMapForBike()') Bike
+

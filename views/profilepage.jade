@@ -1,0 +1,27 @@
+extends layout
+doctype html
+html
+    
+block content
+    h1.
+        Welcome Back #{user.username}
+    form#formGetIndex(name="getindex",method="get",action="/")
+        button#btnSubmit(type="submit") return to home page    
+    - var name=user.username
+    - var password = user.password
+    - var list = user.favourite
+    
+    h2 username: #{name}
+    h2 passowrd: #{password}
+    h2 favourite listing: #{favourite}
+    
+    h2 update information
+    p fill in the field you wish to update and click the update button
+    form#formUpdateUser(name="updateparking",method="post",action="/updateuser")
+        input#inputUsername(type="text", placeholder="username", name="username")
+        input#inputPassword(type="text", placeholder="password", name="password")
+        input#inputConfirmPassword(type="text", placeholder="re-enter new password", name="pwdconfirmation")
+        button#btnSubmit(type="submit") update
+
+        
+    

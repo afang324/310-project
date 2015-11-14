@@ -1,0 +1,26 @@
+extends layout
+doctype html
+html
+block content
+      h1.
+          Parking List
+      ul
+        table
+          tr
+            th Type
+              th Address
+                th Capacity
+                    tr
+                        form#formEditParking(name="editparking",method="get",action="/editparkingpage")
+                            button#btnSubmit(type="submit") edit
+                            &nbsp &nbsp &nbsp &nbsp &nbsp
+                        form#formNewParking(name="newparking",method="get",action="/newparking")
+                            button#btnSubmit(type="submit") new
+                        each parking,  i in parkinglist
+                          tr
+                          td(align="center")= parking.type
+                          td(align="center")= parking.address
+                          td(align="center")= parking.space
+                          //td(align="center")form(method='POST', action='/database/#{parking.id}?_method=EDIT')button(type='submit') Delete
+                          //td(align="center")<button type="button" id="updateBtn", onClick=renderEditParking(#{parking.space})>Edit</button>
+                          //td(align="center")<button type="button" id="updateBtn", onClick = parkinglist/#{parking.space}/update'>Edit</button>

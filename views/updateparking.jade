@@ -1,0 +1,8 @@
+extends layout
+block content
+   h1= title
+   form#formUpdateParking(name="updateParking",method="post",action="/testtest")
+         input#inputType(type="text", placeholder=#{type}, name="type")
+         input#inputAddress(type="text", placeholder=#{address}, name="address")
+         input#inputSpace(type="text", placeholder=#{space}, name="space")
+         button#btnSubmit(type="submit") submit
