@@ -5,17 +5,11 @@ var express = require('express');
 var router = express.Router();
 import ReadDataFiles = require('../helper_class/ReadDataFiles');
 import Parking = require('../class/Parking');
-import AccountManager = require('../helper_class/AccountManager');
 import Geocoder = require('../helper_class/Geocoder');
 
 class Router {
 
     constructor() {
-        //Initialize AccountManager and create an admin
-        var adminname:string = 'aname';
-        var adminpwd:string = 'apassword';
-        var accmgr = new AccountManager;
-        accmgr.createAdmin('aname','apassword');
         
         /* GET home page. */
         router.get('/', function(req, res){
@@ -33,10 +27,6 @@ class Router {
 
         /* POST Update Database */
         router.post('/updatedatabase', function(req, res) {
-            var permission:boolean = accmgr.authenticate('admin');
-            if (!permission){
-                res.send('You Need to Have Administrator Permission');
-            }
             var db = req.db;
             var collection = db.get('parkingcollection');
             //read in data from csv files to database
@@ -46,10 +36,6 @@ class Router {
         
         /* POST Update LatLng */
         router.post('/updatelatlng', function(req, res) {
-            var permission:boolean = accmgr.authenticate('admin');
-            if (!permission){
-                res.send('You Need to Have Administrator Permission');
-            }
             var db = req.db;
             var collection = db.get('parkingcollection');
             //convert all addresses in db to lat lng
@@ -60,130 +46,6 @@ class Router {
         /* GET Hello World page. */
         router.get('/helloworld', function(req, res) {
             res.render('helloworld', { title: 'Hello, World!' });
-        });
-
-        /* GET Login page. */
-        router.get('/loginpage', function(req, res){
-            res.render('loginpage', { title: 'Please Log in to Process' });
-        });
-        
-        /* Validate Log In Information. */
-        router.post('/userlogin', function(req, res){
-            var myUsername = req.body.username;
-            var myPassword = req.body.password;
-            var db = req.db
-            var collection = db.get('usercollection');
-            
-            collection.find({username:myUsername,password:myPassword},{},function(err,acc){
-
-                if(myUsername==adminname && myPassword==adminpwd){
-                    accmgr.login(myUsername,myPassword);
-                    res.redirect('/');
-                }
-                
-                else if(acc==null||acc==''){
-                    console.log('username or password is incorrect');
-                    res.send('The Username or Password Given is Incorrect or Not Found');
-                }else{
-                    console.log('account identity varified');
-                    accmgr.login(myUsername,myPassword);
-                    res.redirect('/profilepage');
-                }   
-            });
-        });
-        
-        /* Get Profile Page */
-        router.get('/profilepage',function(req,res){
-
-            var db = req.db;
-            var collection = db.get('usercollection');
-            collection.find({'username':accmgr.getUsername()},{},function(e,docs){
-                //if user try to access this page without logging in, send err
-                if (docs[0]==null){
-                    res.send('This page is not available, Please log in');
-                }else{
-                    //cipher password before passing it to front end
-                    var user=docs[0];
-                    var password:string = '';
-                    var plength:number = (''+docs[0].password).length;
-                    for(var i=0;i<plength;i++){
-                        password=password.concat('*');
-                    }
-                    user.password=password;
-                    res.render('profilepage', {
-                        "user" : user 
-                    });
-                    }
-            });
-            
-        });
-        
-        /* Post User Information Update */
-        router.post('/updateuser',function(req,res){
-
-            var newname:string = req.body.username;
-            var newpwd:string = req.body.password;
-            var pwdconfirmation:string = req.body.pwdconfirmation;
-            var db = req.db;
-            var collection = db.get('usercollection');
-            //if a new name is found
-            if (newname!=''){
-                collection.find({'username':newname},{},function(e,docs){
-                    //if username taken, send err
-                    if (docs[0]!=null){
-                        res.send('This name is taken, please try another name');
-                    }else{
-                        collection.update({'username':accmgr.getUsername()},
-                            {$set:{'username':newname}}
-                        )
-                        accmgr.setUsername(newname);
-                    }
-                });
-            }
-            //if a new password is found
-            if (newpwd!=''){
-                if (newpwd==pwdconfirmation){
-                    collection.update({'username':accmgr.getUsername()},
-                                {$set:{'password':newpwd}}
-                    )
-                    accmgr.setPassword(newpwd);
-                    res.redirect('/profilepage');
-                }else{
-                    res.send('New Password Cannot be Confirmed, Please make Sure it is Properly Entered');
-                }
-            }
-            //if no new name or password is found, redirect back to profile page
-            res.redirect('profilepage');
-            
-        });
-        
-        /* GET Logout page. */
-        router.get('/logoutpage', function(req, res){
-            accmgr.logout();
-            res.render('logoutpage');
-        });
-        /* GET New UserAccount Page*/
-        router.get('/newaccountpage', function(req, res){
-            res.render('newaccountpage', { title: 'Yay Free Membership!' });
-        });
-        
-        /* Set Up New Account */
-        router.post('/addaccount', function(req, res){
-            var myUsername = req.body.username;
-            var myPassword = req.body.password;
-            var db = req.db
-            var collection=db.get('usercollection');
-            
-            collection.findOne({username:myUsername,password:myPassword},{},function(e,acc){
-                if(acc==null || acc==''){
-                    console.log('username not taken');
-                    accmgr.createAccount(myUsername,myPassword,collection);
-                    res.redirect('/');
-                }else{
-                    console.log('username has already been taken');
-                    res.send('Initialization Failure: username has been taken or is not available');
-                }
-            });
         });
         
         /* GET Userlist page. */
@@ -196,7 +58,6 @@ class Router {
                 });
             });
         });
-
 
         /* GET Parking List page. */
         router.get('/parkinglist', function(req, res) {
